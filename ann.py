@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-# Data Prepossessing ----------------------------------------------
+# Data Prepossessing ---------------------------------------------------------------------------------------------------
 
 # Importing the dataset
 dataset = pd.read_csv('Churn_Modelling.csv')
@@ -39,3 +39,18 @@ sc_x = StandardScaler()
 x_train = sc_x.fit_transform(x_train)
 x_test = sc_x.transform(x_test)
 
+# Building the ANN -----------------------------------------------------------------------------------------------------
+
+import keras
+from keras.models import Sequential
+from keras.layers import Dense
+
+# Initializing the ANN
+classifier = Sequential()
+
+# Adding the input layer and the first hidden layer
+classifier.add(Dense(output_dim=6, init='uniform', activation='relu', input_dim=11))
+
+# Adding the second hidden layer
+
+# Making the predictions and evaluating the model ----------------------------------------------------------------------
