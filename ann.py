@@ -22,6 +22,7 @@ from sklearn.compose import ColumnTransformer
 ct = ColumnTransformer([("Name_Of_Your_Step", OneHotEncoder(),[1])], remainder='passthrough')
 x = ct.fit_transform(x)
 x = x[:, 1:] # This is to prevent the dummy variable trap (highly collinear variables)
+
 """  ---------------------------------------------- This is the code that prints the matrix to the temp file for testing
 np.set_printoptions(threshold=sys.maxsize)
 temp = open('temp.csv', 'w')
@@ -52,5 +53,26 @@ classifier = Sequential()
 classifier.add(Dense(output_dim=6, init='uniform', activation='relu', input_dim=11))
 
 # Adding the second hidden layer
+classifier.add(Dense(output_dim=6, init='uniform', activation='relu'))
+
+# Adding the output layer / softmax is sigmoid but for more than one output
+classifier.add(Dense(output_dim=1, init='uniform', activation='sigmoid'))
+
+# Compiling the ANN (Applying stochastic gradient descent) / adam is a very efficient stochastic gradient descent algorithm,
+classifier.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy']) # would use catagorical_crossentropy if more than one output
+
+# Fitting the nueral network to the training data
+classifier.fit(x_train, y_train, batch_size=10,epochs=100)
 
 # Making the predictions and evaluating the model ----------------------------------------------------------------------
+
+# Predicting the test set results
+y_pred = classifier.predict(x_test)
+y_pred = (y_pred > 0.5)
+
+# Making the confusion matrix
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test, y_pred)
+
+print(cm)
+print("Accuracy: " + str((cm[0,0] + cm[1,1]) / 2000))
